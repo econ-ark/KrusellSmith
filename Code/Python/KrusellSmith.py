@@ -178,6 +178,7 @@ import numpy as np
 
 from copy import deepcopy
 from HARK.utilities import plotFuncs, plotFuncsDer, make_figs
+from HARK.distribution import DiscreteDistribution
 
 # %% {"code_folding": [0]}
 # Markov consumer type that allows aggregate shocks
@@ -287,9 +288,13 @@ ell_eb = 1.0/prb_eb   # 1=pe_g*ell_ge+pu_b*ell_gu=pe_b*ell_be+pu_b*ell_gu
 #   idiosyncratic persistent income level by state (KS have no persistent shocks p_ind is always 1.0)
 #   idiosyncratic transitory income level by state
 
-KSAgent.IncomeDstn[0] = \
-[[np.array([prb_eg,prb_ug]),np.array([p_ind,p_ind]),np.array([ell_eg,ell_ug])], # Agg state good
- [np.array([prb_eb,prb_ub]),np.array([p_ind,p_ind]),np.array([ell_eb,ell_ub])]  # Agg state bad
+KSAgent.IncomeDstn[0] = [
+     DiscreteDistribution(np.array([prb_eg,prb_ug]), 
+                          [np.array([p_ind,p_ind]),
+                           np.array([ell_eg,ell_ug])]), # Agg state good
+     DiscreteDistribution(np.array([prb_eb,prb_ub]),
+                          [np.array([p_ind,p_ind]),
+                           np.array([ell_eb,ell_ub])])  # Agg state bad
 ]
 
 # %% [markdown]
@@ -345,8 +350,8 @@ Perm_g = Perm_b = 1.0 # KS assume there are no aggregate permanent shocks
 # Third  element is agg transitory shocks, which are calibrated the same as in Krusell Smith.
 
 KSAggShkDstn = [
-    [np.array([1.0]),np.array([Perm_g]),np.array([Tran_g])], # Aggregate good
-    [np.array([1.0]),np.array([Perm_b]),np.array([Tran_b])]  # Aggregate bad
+     DiscreteDistribution(np.array([1.0]), [np.array([Perm_g]), np.array([Tran_g])]), # Aggregate good
+     DiscreteDistribution(np.array([1.0]), [np.array([Perm_b]), np.array([Tran_b])])  # Aggregate bad
 ]
 
 KSEconomy.AggShkDstn = KSAggShkDstn
@@ -441,7 +446,8 @@ from HARK.utilities import getLorenzShares, getPercentiles
 
 # The cstwMPC model conveniently has data on the wealth distribution 
 # from the U.S. Survey of Consumer Finances
-from HARK.cstwMPC.SetupParamsCSTW import SCF_wealth, SCF_weights
+from HARK.datasets import load_SCF_wealth_weights
+SCF_wealth, SCF_weights = load_SCF_wealth_weights()
 
 # %% {"code_folding": []}
 # Construct the Lorenz curves and plot them
@@ -490,13 +496,15 @@ print("The Euclidean distance between simulated wealth distribution and the esti
 
 # %% {"code_folding": []}
 # Construct the distribution of types
-from HARK.utilities import approxUniform
+from HARK.distribution import Uniform
+
 
 # Specify the distribution of the discount factor
 num_types = 3              # number of types we want;
 DiscFac_mean   = 0.9858    # center of beta distribution 
 DiscFac_spread = 0.0085    # spread of beta distribution
-DiscFac_dstn = approxUniform(num_types, DiscFac_mean-DiscFac_spread, DiscFac_mean+DiscFac_spread)[1]
+DiscFac_dstn = Uniform(bot=DiscFac_mean-DiscFac_spread, top=DiscFac_mean+DiscFac_spread).approx(num_types).X
+
 BaselineType = deepcopy(KSAgent)
 
 MyTypes = [] # initialize an empty list to hold our consumer types
@@ -602,3 +610,5 @@ plt.xlabel(r'$\theta$')
 plt.ylabel('Target wealth')
 make_figs('target_wealth', True, False, '../../Figures')
 plt.show()
+
+# %%

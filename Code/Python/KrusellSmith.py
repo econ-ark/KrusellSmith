@@ -7,8 +7,8 @@
 #     text_representation:
 #       extension: .py
 #       format_name: percent
-#       format_version: '1.2'
-#       jupytext_version: 1.2.3
+#       format_version: '1.3'
+#       jupytext_version: 1.6.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -22,7 +22,7 @@
 #     name: python
 #     nbconvert_exporter: python
 #     pygments_lexer: ipython3
-#     version: 3.7.6
+#     version: 3.7.3
 # ---
 
 # %% [markdown]
@@ -146,7 +146,7 @@
 # %% [markdown]
 # #### The Consumer
 
-# %% {"code_folding": [0, 6]}
+# %% code_folding=[0, 6]
 # Import generic setup tools
 
 # This is a jupytext paired notebook that autogenerates KrusellSmith.py
@@ -180,11 +180,11 @@ from copy import deepcopy
 from HARK.utilities import plotFuncs, plotFuncsDer, make_figs
 from HARK.distribution import DiscreteDistribution
 
-# %% {"code_folding": [0]}
+# %% code_folding=[0]
 # Markov consumer type that allows aggregate shocks
 from HARK.ConsumptionSaving.ConsAggShockModel import AggShockMarkovConsumerType
 
-# %% {"code_folding": [0]}
+# %% code_folding=[0]
 # Define a dictionary to make an 'instance' of our Krusell-Smith consumer.
 
 # The folded dictionary below contains many parameters to the 
@@ -270,7 +270,7 @@ KSAgent = AggShockMarkovConsumerType(**KSAgentDictionary)
 #       * In the KS notation, this is $\epsilon\ell$  
 #
 
-# %% {"code_folding": []}
+# %% code_folding=[]
 # Construct the income distribution for the Krusell-Smith agent
 prb_eg = 0.96         # Probability of   employment in the good state
 prb_ug = 1-prb_eg     # Probability of unemployment in the good state
@@ -303,7 +303,7 @@ KSAgent.IncomeDstn[0] = [
 # %% [markdown]
 # #### The Aggregate Economy
 
-# %% {"code_folding": []}
+# %% code_folding=[]
 from HARK.ConsumptionSaving.ConsAggShockModel import CobbDouglasMarkovEconomy
 
 KSEconomyDictionary = {
@@ -335,7 +335,7 @@ KSEconomy = CobbDouglasMarkovEconomy(agents = [KSAgent], **KSEconomyDictionary) 
 #
 # The structure of the inputs for $\texttt{AggShkDstn}$ follows the same logic as for $\texttt{IncomeDstn}$. Now there is only one possible outcome for each aggregate state (the KS aggregate states are very simple), therefore, each aggregate state has only one possible condition which happens with probability 1.
 
-# %% {"code_folding": []}
+# %% code_folding=[]
 # Calibrate the magnitude of the aggregate shocks
 
 Tran_g = 1.01 # Productivity z in the good aggregate state
@@ -371,7 +371,7 @@ KSEconomy.AggShkDstn = KSAggShkDstn
 # ### Solving the Model
 # Now, we have fully defined all of the elements of the macroeconomy, and we are in postion to construct an object that represents the economy and to construct a rational expectations equilibrium.
 
-# %% {"code_folding": []}
+# %% code_folding=[]
 # Construct the economy, make an initial history, then solve 
 
 KSAgent.getEconomyData(KSEconomy) # Makes attributes of the economy, attributes of the agent
@@ -390,7 +390,7 @@ KSEconomy.solve() # Solve the economy using the market method.
 # %% [markdown]
 # The last line above is the converged aggregate saving rule for good and bad times, respectively.
 
-# %% {"code_folding": []}
+# %% code_folding=[]
 # Plot some key results
 
 print('Aggregate savings as a function of aggregate market resources:')
@@ -435,12 +435,13 @@ plt.show()
 #
 
 # %%
-sim_wealth = KSEconomy.aLvlNow[0]
+sim_wealth = KSEconomy.reap_state['aLvlNow'][0]
+
 
 print("The mean of individual wealth is "+ str(sim_wealth.mean()) + ";\n the standard deviation is "
       + str(sim_wealth.std())+";\n the median is " + str(np.median(sim_wealth)) +".")
 
-# %% {"code_folding": []}
+# %% code_folding=[]
 # Get some tools for plotting simulated vs actual wealth distributions
 from HARK.utilities import getLorenzShares, getPercentiles
 
@@ -449,7 +450,7 @@ from HARK.utilities import getLorenzShares, getPercentiles
 from HARK.datasets import load_SCF_wealth_weights
 SCF_wealth, SCF_weights = load_SCF_wealth_weights()
 
-# %% {"code_folding": []}
+# %% code_folding=[]
 # Construct the Lorenz curves and plot them
 
 pctiles = np.linspace(0.001,0.999,15)
@@ -494,7 +495,7 @@ print("The Euclidean distance between simulated wealth distribution and the esti
 #
 # Here, instead, we assume that different agents have different values of $\beta$ that are uniformly distributed over some range. We approximate the uniform distribution by three points.  The agents are heterogeneous _ex ante_ (and permanently).
 
-# %% {"code_folding": []}
+# %% code_folding=[]
 # Construct the distribution of types
 from HARK.distribution import Uniform
 
@@ -515,7 +516,7 @@ for nn in range(len(DiscFac_dstn)):
     NewType.seed = nn # give each consumer type a different RNG seed
     MyTypes.append(NewType)
 
-# %% {"code_folding": []}
+# %% code_folding=[]
 # Put all agents into the economy
 KSEconomy_sim = CobbDouglasMarkovEconomy(agents = MyTypes, **KSEconomyDictionary) 
 KSEconomy_sim.AggShkDstn = KSAggShkDstn # Agg shocks are the same as defined earlier
@@ -526,13 +527,13 @@ for ThisType in MyTypes:
 KSEconomy_sim.makeAggShkHist() # Make a simulated prehistory of the economy
 KSEconomy_sim.solve()          # Solve macro problem by getting a fixed point dynamic rule
 
-# %% {"code_folding": []}
+# %% code_folding=[]
 # Get the level of end-of-period assets a for all types of consumers
-aLvl_all = np.concatenate([KSEconomy_sim.aLvlNow[i] for i in range(len(MyTypes))])
+aLvl_all = np.concatenate([KSEconomy_sim.reap_state['aLvlNow'][i] for i in range(len(MyTypes))])
 
 print('Aggregate capital to income ratio is ' + str(np.mean(aLvl_all)))
 
-# %% {"code_folding": []}
+# %% code_folding=[]
 # Plot the distribution of wealth across all agent types
 sim_3beta_wealth = aLvl_all
 pctiles = np.linspace(0.001,0.999,15)
@@ -554,15 +555,15 @@ plt.ylim([0,1])
 make_figs('wealth_distribution_2', True, False, '../../Figures')
 plt.show()
 
-# %% {"code_folding": []}
+# %% code_folding=[]
 # The mean levels of wealth for the three types of consumer are 
-[np.mean(KSEconomy_sim.aLvlNow[0]),np.mean(KSEconomy_sim.aLvlNow[1]),np.mean(KSEconomy_sim.aLvlNow[2])]
+[np.mean(KSEconomy_sim.reap_state['aLvlNow'][0]),np.mean(KSEconomy_sim.reap_state['aLvlNow'][1]),np.mean(KSEconomy_sim.reap_state['aLvlNow'][2])]
 
-# %% {"code_folding": []}
+# %% code_folding=[]
 # Plot the distribution of wealth 
 for i in range(len(MyTypes)):
     if i<=2:
-        plt.hist(np.log(KSEconomy_sim.aLvlNow[i])\
+        plt.hist(np.log(KSEconomy_sim.reap_state['aLvlNow'][i])\
                  ,label=r'$\beta$='+str(round(DiscFac_dstn[i],4))\
                  ,bins=np.arange(-2.,np.log(max(aLvl_all)),0.05))
         plt.yticks([])
@@ -571,7 +572,7 @@ plt.title('Log Wealth Distribution of 3 Types')
 make_figs('log_wealth_3_types', True, False, '../../Figures')
 plt.show()
 
-# %% {"code_folding": []}
+# %% code_folding=[]
 # Distribution of wealth in original model with one type
 plt.hist(np.log(sim_wealth),bins=np.arange(-2.,np.log(max(aLvl_all)),0.05))
 plt.yticks([])
@@ -598,7 +599,7 @@ plt.show()
 #
 # A plot of $a$ as a function of $\theta$ for a particular parameterization is shown below.
 
-# %% {"code_folding": []}
+# %% code_folding=[]
 # Plot target wealth as a function of time preference rate for calibrated tractable model
 fig = plt.figure()
 ax  = plt.axes()
@@ -610,5 +611,68 @@ plt.xlabel(r'$\theta$')
 plt.ylabel('Target wealth')
 make_figs('target_wealth', True, False, '../../Figures')
 plt.show()
+
+# %% [markdown]
+# ## New and Improved Krusell-Smith Model
+#
+# The figures above were generated from a model that is very similar to, but not exactly like, the model presented in Krusell & Smith (1998), using tools that were already in HARK and could be adapted for this purpose.  This model lacks serially correlated employment states for individual agents, but is otherwise identical to the KS model.
+#
+# More recently, we have added a model to HARK that exactly replicates the Krusell-Smith model (without dynastic discount factor heterogeneity).  In the cells below, we present a basic example of using this model. The default parameters are taken directly from Krusell & Smith (1998) and their results are replicated almost exactly.
+
+# %%
+# Import Krusell-Smith model
+from HARK.ConsumptionSaving.ConsAggShockModel import KrusellSmithType, KrusellSmithEconomy
+from time import time
+from scipy.stats import linregress
+
+# %%
+# Make default KS agent type and economy
+KSeconomy = KrusellSmithEconomy()
+KSeconomy.verbose = False
+KStype = KrusellSmithType()
+KStype.cycles = 0
+KStype.getEconomyData(KSeconomy)
+KSeconomy.agents = [KStype]
+KSeconomy.makeMrkvHist()
+
+# %%
+# Solve the Krusell-Smith economy
+t0 = time()
+print("Now solving for the equilibrium of the Krusell-Smith (1998) model.  This might take a few minutes...")
+KSeconomy.solve()
+t1 = time()
+print('Solving the Krusell-Smith model took ' + str(t1-t0) + ' seconds.')
+
+# %%
+# Plot the consumption function for each discrete state
+state_names = ['bad economy, unemployed', 'bad economy, employed',
+               'good economy, unemployed', 'good economy, employed']
+
+for j in range(4):
+    plt.xlabel(r'Idiosyncratic market resources $m$')
+    plt.ylabel(r'Consumption $c$')
+    plt.title('Consumption function by aggregate market resources: ' + state_names[j])
+    plotFuncs(KStype.solution[0].cFunc[j].xInterpolators, 0., 50.)
+
+# %%
+# Extract history of aggregate capital and run a serial autoregression
+mystr = lambda x : '{:.4f}'.format(x)
+mystr2 = lambda x : '{:.7f}'.format(x)
+K_hist = np.array(KSeconomy.history['Aprev'])[KSeconomy.T_discard:]
+Mrkv_hist = KSeconomy.MrkvNow_hist[KSeconomy.T_discard:]
+bad = Mrkv_hist[:-1] == 0
+good = Mrkv_hist[:-1] == 1
+logK_t = np.log(K_hist[:-1])
+logK_tp1 = np.log(K_hist[1:])
+results_bad = linregress(logK_t[bad], logK_tp1[bad])
+results_good = linregress(logK_t[good], logK_tp1[good])
+print('')
+print('Equilibrium dynamics of aggregate capital:')
+print("Bad state:  log k' = " + mystr(results_bad[1]) + ' + ' + mystr(results_bad[0]) + ' log k (r-sq = ' +  mystr2(results_bad[2]**2) + ')')
+print("Good state: log k' = " + mystr(results_good[1]) + ' + ' + mystr(results_good[0]) + ' log k (r-sq = ' +  mystr2(results_good[2]**2) + ')')
+print('')
+print("Krusell & Smith's published results (p877):")
+print("Bad state:  log k' = 0.085 + 0.965 log k (r-sq = 0.999998)")
+print("Good state: log k' = 0.095 + 0.962 log k (r-sq = 0.999998)")
 
 # %%

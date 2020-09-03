@@ -1,1 +1,3 @@
-econ-ark==0.10.5
+matplotlib
+numpy
+econ-ark

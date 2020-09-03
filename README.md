@@ -2,7 +2,7 @@
 
 This is a Replication of Krusell and Smith, 1998.
 
-`do_all.py` reproduces all the results of the paper.
+`reproduce.sh` reproduces all the results of the paper.
 
 ## References
 

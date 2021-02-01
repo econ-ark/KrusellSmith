@@ -1,4 +1,4 @@
-name: krussellsmith
+name: krusellsmith
 channels:
   - conda-forge
 dependencies:

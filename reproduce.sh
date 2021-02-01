@@ -1,3 +1,8 @@
-python3 -m pip install -r requirements.txt
+# requirements setup and mamba for faster install for env
+source /opt/conda/etc/profile.d/conda.sh
+mamba env create -qq -f environment.yml
+conda activate krussellsmith
+
+# execute the script to create figures
 cd Code/Python
 ipython KrusellSmith.py

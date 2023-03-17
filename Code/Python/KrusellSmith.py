@@ -181,7 +181,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from copy import deepcopy
-from HARK.utilities import plotFuncs, plotFuncsDer, make_figs
+from HARK.utilities import plotFuncs, make_figs
 from HARK.distribution import DiscreteDistribution
 
 # %% code_folding=[0]
@@ -239,8 +239,7 @@ KSAgentDictionary = {
     "TranShkAggStd": [
         0.0,
         0.0,
-    ],  # Standard deviation of log aggregate transitory shocks by state. No continuous shocks in a state.
-    "PermGroFacAgg": 1.0,
+    ],
 }
 
 # Here we state just the "interesting" parts of the consumer's specification
@@ -494,7 +493,7 @@ print(
 
 # %% code_folding=[]
 # Get some tools for plotting simulated vs actual wealth distributions
-from HARK.utilities import getLorenzShares, getPercentiles
+from HARK.utilities import getLorenzShares
 
 # The cstwMPC model conveniently has data on the wealth distribution
 # from the U.S. Survey of Consumer Finances
@@ -738,8 +737,10 @@ for j in range(4):
 
 # %%
 # Extract history of aggregate capital and run a serial autoregression
-mystr = lambda x: "{:.4f}".format(x)
-mystr2 = lambda x: "{:.7f}".format(x)
+def mystr(x):
+    return "{:.4f}".format(x)
+def mystr2(x):
+    return "{:.7f}".format(x)
 K_hist = np.array(KSeconomy.history["Aprev"])[KSeconomy.T_discard :]
 Mrkv_hist = KSeconomy.MrkvNow_hist[KSeconomy.T_discard :]
 bad = Mrkv_hist[:-1] == 0

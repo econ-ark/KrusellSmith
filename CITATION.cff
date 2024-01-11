@@ -1,0 +1,24 @@
+cff-version: "1.2.0"
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: "Carroll"
+    given-names: "Christopher D."
+    orcid: "https://orcid.org/0000-0003-3732-9312"
+title: "Income and Wealth Heterogeneity in the Macroeconomy"
+abstract: "Income and wealth heterogeneity in the macroeconomy"
+
+references:
+  - type: article
+    authors:
+      - family-names: "Krusell"
+        given-names: "Per"
+      - family-names: "Smith, Jr."
+        given-names: "Anthony A."
+    title: "Income and Wealth Heterogeneity in the Macroeconomy"
+    doi: "10.1086/250034"
+    date-released: 1998-10-01
+    publisher:
+        name: "Journal of Political Economy"
+
+repository-code: https://github.com/econ-ark/KrusellSmith
+

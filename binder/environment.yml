@@ -3,6 +3,5 @@ channels:
   - defaults
 dependencies:
   - python=3.8
-  - pip
-  - pip:
-    - -r requirements.txt
+  - econ-ark=0.10.8
+  - ipython

@@ -28,7 +28,7 @@
 # %% [markdown]
 # # [Krusell Smith (1998)](https://www.journals.uchicago.edu/doi/pdf/10.1086/250034)
 #
-# - Original version by Tim Munday 
+# - Original version by Tim Munday
 # - Comments and extensions by Tao Wang
 # - Further edits by Chris Carroll
 
@@ -46,7 +46,7 @@
 #    * _ex post_ heterogeneity arises from uninsurable idiosyncratic income shocks
 #       * Specifically, individuals are at risk of spells of unemployment
 #       * In a spell of unemployment, their income is zero
-#    
+#
 # Thus, each agent faces two types of uncertainty: About their employment state, and about the income they will earn when employed.  And the values of income and unemployment risk depend on the aggregate state.
 #
 
@@ -66,10 +66,10 @@
 # The agent can choose to save by buying capital $k$ which is bounded below at the borrowing constraint of 0.
 #
 #
-# Putting all of this together, aggregate output is given by: 
-# \begin{eqnarray}
+# Putting all of this together, aggregate output is given by:
+# \begin{align}
 # \bar{y} & = & z\bar{k}^\alpha \bar{\ell}^{1-\alpha}
-# \end{eqnarray}
+# \end{align}
 #
 
 # %% [markdown]
@@ -84,18 +84,18 @@
 # (Krusell and Smith allow for serially correlated unemployment at the idiosyncratic level. Here we will simplify this and have unemployment be serially uncorrelated.)
 
 # %% [markdown]
-# Finally, $\Gamma$ denotes the current distribution of consumers over capital and employment status, and $H$ denotes the law of motion of this distribution. 
+# Finally, $\Gamma$ denotes the current distribution of consumers over capital and employment status, and $H$ denotes the law of motion of this distribution.
 
 # %% [markdown]
 # #### The Idiosyncratic Individual's Problem Given the Aggregate State
 #
 # The individual's problem is:
-# \begin{eqnarray*}
+# \begin{align*}
 # V(k, \epsilon; \Gamma, z) &=& \max_{k'}\{U(c) + \beta \mathbb{E}[V(k' ,\epsilon'; \Gamma', z')|z, \epsilon]\} \\
 # c + k' &=& r(\bar{k}, \bar{\ell}, z)k + w(\bar{k}, \bar{\ell}, z)\ell\epsilon + (1-\delta)k \\
 # \Gamma' &=& H(\Gamma, z, z') \\
 # k' &\geq& 0 \\
-# \end{eqnarray*}
+# \end{align*}
 
 # %% [markdown]
 # Krusell and Smith define an equilibrium as a law of motion $H$, a value function $V$, a rule for updating capital $f$ and pricing functions $r$ and $w$, such that $V$ and $f$ solve the consumers problem, $r$ and $w$ denote the marginal products of capital and labour, and $H$ is consistent with $f$ (i.e. if we add up all of the individual agents capital choices we get the correct distribution of capital).
@@ -103,9 +103,9 @@
 # %% [markdown]
 # ##### Discussion of the KS Algorithm
 #
-# In principle, $\Gamma$ is a high-dimensional object because it includes the whole distribution of individuals' wealth and employment states. Because the optimal amount to save is a nonlinear function of the level of idiosyncratic $k$, next period's aggregate capital stock $\bar{k}'$ depends on the distribution of the holdings of idiosyncratic $k$ across the population of consumers. Therefore the law of motion $H$ is not a trivial function of the $\Gamma$. 
+# In principle, $\Gamma$ is a high-dimensional object because it includes the whole distribution of individuals' wealth and employment states. Because the optimal amount to save is a nonlinear function of the level of idiosyncratic $k$, next period's aggregate capital stock $\bar{k}'$ depends on the distribution of the holdings of idiosyncratic $k$ across the population of consumers. Therefore the law of motion $H$ is not a trivial function of the $\Gamma$.
 #
-# KS simplified this problem by noting the following. 
+# KS simplified this problem by noting the following.
 #
 # 1. The agent cares about the future aggregate aggregate state only insofar as that state affects their own personal value of $c$
 # 1. Future values of $c$ depend on the aggregate state only through the budget constraint
@@ -125,20 +125,20 @@
 #
 # 1. Choose the number of moments $n$ of the distribution of $k$ to be included in the set of variables to forecast $\bar{k}'$. In the simplest case, $n=1$, the only forecasting variable for next period's $\bar{k}'$ is the mean (the first moment, $n=1$)) of current capital, $\bar{k}$.
 # 2. Each individual adopts the same belief about the law motion of these moments, $H_I$ and finds the optimal decision policy, $f_I$, contingent on that guess.
-# 3. Use the optimal policy to simulate a history of aggregate capital with a large number of agents. 
-# 4. Characterize the realized law of motion using the same number of moments $n$ 
-# 5. Compare it with the $H_I$, what is taken as given by individuals. 
-# 6. Iterate until the two converge. 
+# 3. Use the optimal policy to simulate a history of aggregate capital with a large number of agents.
+# 4. Characterize the realized law of motion using the same number of moments $n$
+# 5. Compare it with the $H_I$, what is taken as given by individuals.
+# 6. Iterate until the two converge.
 #
 # In the end, the solution to the original problem is well approximated by the following simplified problem:
 #
-# \begin{eqnarray*}
+# \begin{align*}
 # V(k, \epsilon; \bar k, z) &=& max_{c, k'}\{U(c) + \beta E[V(k' ,\epsilon'; \bar k', z')|z, \epsilon]\} \\
 # c + k' &=& r(\bar{k}, \bar{\ell}, z)k + w(\bar{k}, \bar{\ell}, z)l\epsilon + (1-\delta)k \\
 # \text{When }~ z=z_g, \quad \mathbb{E}[\log\bar{k}'] & = & a_0 + a_1 \log\bar k \\
 # \text{When }~ z=z_b,  \quad \mathbb{E}[\log\bar{k}'] & = & b_0 + b_1 \log\bar k \\
 # k' &\geq& 0 \\
-# \end{eqnarray*}
+# \end{align*}
 
 # %% [markdown]
 # ## Implementation Using the HARK Toolkit
@@ -155,21 +155,25 @@
 # Google "how can I check if code is executed in the ipython notebook"
 def in_ipynb():
     try:
-        if str(type(get_ipython())) == "<class 'ipykernel.zmqshell.ZMQInteractiveShell'>":
+        if (
+            str(type(get_ipython()))
+            == "<class 'ipykernel.zmqshell.ZMQInteractiveShell'>"
+        ):
             return True
         else:
             return False
     except NameError:
         return False
 
+
 # Determine whether to make the figures inline (for spyder or jupyter)
 # vs whatever is the automatic setting that will apply if run from the terminal
 if in_ipynb():
     # %matplotlib inline generates a syntax error when run from the shell
     # so do this instead
-    get_ipython().run_line_magic('matplotlib', 'inline') 
+    get_ipython().run_line_magic("matplotlib", "inline")
 else:
-    get_ipython().run_line_magic('matplotlib', 'auto') 
+    get_ipython().run_line_magic("matplotlib", "auto")
 
 # Import the plot-figure library matplotlib
 
@@ -177,7 +181,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from copy import deepcopy
-from HARK.utilities import plotFuncs, plotFuncsDer, make_figs
+from HARK.utilities import plotFuncs, make_figs
 from HARK.distribution import DiscreteDistribution
 
 # %% code_folding=[0]
@@ -187,118 +191,135 @@ from HARK.ConsumptionSaving.ConsAggShockModel import AggShockMarkovConsumerType
 # %% code_folding=[0]
 # Define a dictionary to make an 'instance' of our Krusell-Smith consumer.
 
-# The folded dictionary below contains many parameters to the 
+# The folded dictionary below contains many parameters to the
 # AggShockMarkovConsumerType agent that are not needed for the KS model
-KSAgentDictionary = { 
-    "LivPrb" : [1.0],                      # Survival probability
-    "AgentCount" : 10000,                  # Number of agents of this type (only matters for simulation)
-    "aNrmInitMean" : 0.0,                  # Mean of log initial assets (only matters for simulation)
-    "aNrmInitStd"  : 0.0,                  # Standard deviation of log initial assets (only for simulation)
-    "pLvlInitMean" : 0.0,                  # Mean of log initial permanent income (only matters for simulation)
-    "pLvlInitStd"  : 0.0,                  # Standard deviation of log initial permanent income (only matters for simulation)
-    "PermGroFacAgg" : 1.0,                 # Aggregate permanent income growth factor (only matters for simulation)
-    "T_age" : None,                        # Age after which simulated agents are automatically killed
-    "T_cycle" : 1,                         # Number of periods in the cycle for this agent type
-# Parameters for constructing the "assets above minimum" grid
-    "aXtraMin" : 0.001,                    # Minimum end-of-period "assets above minimum" value
-    "aXtraMax" : 20,                       # Maximum end-of-period "assets above minimum" value               
-    "aXtraExtra" : [None],                 # Some other value of "assets above minimum" to add to the grid
-    "aXtraNestFac" : 3,                    # Exponential nesting factor when constructing "assets above minimum" grid
-    "aXtraCount" : 24,                     # Number of points in the grid of "assets above minimum"
-# Parameters describing the income process
-    "PermShkCount" : 1,                    # Number of points in discrete approximation to permanent income shocks - no shocks of this kind!
-    "TranShkCount" : 1,                    # Number of points in discrete approximation to transitory income shocks - no shocks of this kind!
-    "PermShkStd" : [0.],                   # Standard deviation of log permanent income shocks - no shocks of this kind!
-    "TranShkStd" : [0.],                   # Standard deviation of log transitory income shocks - no shocks of this kind!
-    "UnempPrb" : 0.0,                      # Probability of unemployment while working - no shocks of this kind!
-    "UnempPrbRet" : 0.00,                  # Probability of "unemployment" while retired - no shocks of this kind!
-    "IncUnemp" : 0.0,                      # Unemployment benefits replacement rate
-    "IncUnempRet" : 0.0,                   # "Unemployment" benefits when retired
-    "tax_rate" : 0.0,                      # Flat income tax rate
-    "T_retire" : 0,                        # Period of retirement (0 --> no retirement)
-    "BoroCnstArt" : 0.0,                   # Artificial borrowing constraint; imposed minimum level of end-of period assets   
-    "PermGroFac" : [1.0],                  # Permanent income growth factor
-# New Parameters that we need now    
-    'MgridBase': np.array([0.1,0.3,0.6,
-                           0.8,0.9,0.98,
-                           1.0,1.02,1.1,
-                           1.2,1.6,2.0,
-                           3.0]),          # Grid of capital-to-labor-ratios (factors) 
-    'PermShkAggStd' : [0.0,0.0],           # Standard deviation of log aggregate permanent shocks by state. No continous shocks in a state.
-    'TranShkAggStd' : [0.0,0.0],           # Standard deviation of log aggregate transitory shocks by state. No continuous shocks in a state.
-    'PermGroFacAgg' : 1.0
+KSAgentDictionary = {
+    "LivPrb": [1.0],  # Survival probability
+    "AgentCount": 10000,  # Number of agents of this type (only matters for simulation)
+    "aNrmInitMean": 0.0,  # Mean of log initial assets (only matters for simulation)
+    "aNrmInitStd": 0.0,  # Standard deviation of log initial assets (only for simulation)
+    "pLvlInitMean": 0.0,  # Mean of log initial permanent income (only matters for simulation)
+    "pLvlInitStd": 0.0,  # Standard deviation of log initial permanent income (only matters for simulation)
+    "PermGroFacAgg": 1.0,  # Aggregate permanent income growth factor (only matters for simulation)
+    "T_age": None,  # Age after which simulated agents are automatically killed
+    "T_cycle": 1,  # Number of periods in the cycle for this agent type
+    # Parameters for constructing the "assets above minimum" grid
+    "aXtraMin": 0.001,  # Minimum end-of-period "assets above minimum" value
+    "aXtraMax": 20,  # Maximum end-of-period "assets above minimum" value
+    "aXtraExtra": [
+        None
+    ],  # Some other value of "assets above minimum" to add to the grid
+    "aXtraNestFac": 3,  # Exponential nesting factor when constructing "assets above minimum" grid
+    "aXtraCount": 24,  # Number of points in the grid of "assets above minimum"
+    # Parameters describing the income process
+    "PermShkCount": 1,  # Number of points in discrete approximation to permanent income shocks - no shocks of this kind!
+    "TranShkCount": 1,  # Number of points in discrete approximation to transitory income shocks - no shocks of this kind!
+    "PermShkStd": [
+        0.0
+    ],  # Standard deviation of log permanent income shocks - no shocks of this kind!
+    "TranShkStd": [
+        0.0
+    ],  # Standard deviation of log transitory income shocks - no shocks of this kind!
+    "UnempPrb": 0.0,  # Probability of unemployment while working - no shocks of this kind!
+    "UnempPrbRet": 0.00,  # Probability of "unemployment" while retired - no shocks of this kind!
+    "IncUnemp": 0.0,  # Unemployment benefits replacement rate
+    "IncUnempRet": 0.0,  # "Unemployment" benefits when retired
+    "tax_rate": 0.0,  # Flat income tax rate
+    "T_retire": 0,  # Period of retirement (0 --> no retirement)
+    "BoroCnstArt": 0.0,  # Artificial borrowing constraint; imposed minimum level of end-of period assets
+    "PermGroFac": [1.0],  # Permanent income growth factor
+    # New Parameters that we need now
+    "MgridBase": np.array(
+        [0.1, 0.3, 0.6, 0.8, 0.9, 0.98, 1.0, 1.02, 1.1, 1.2, 1.6, 2.0, 3.0]
+    ),  # Grid of capital-to-labor-ratios (factors)
+    "PermShkAggStd": [
+        0.0,
+        0.0,
+    ],  # Standard deviation of log aggregate permanent shocks by state. No continous shocks in a state.
+    "TranShkAggStd": [
+        0.0,
+        0.0,
+    ],
 }
 
 # Here we state just the "interesting" parts of the consumer's specification
 
-KSAgentDictionary['CRRA']    = 1.0      # Relative risk aversion 
-KSAgentDictionary['DiscFac'] = 0.99     # Intertemporal discount factor
-KSAgentDictionary['cycles']  = 0        # cycles=0 means consumer is infinitely lived
+KSAgentDictionary["CRRA"] = 1.0  # Relative risk aversion
+KSAgentDictionary["DiscFac"] = 0.99  # Intertemporal discount factor
+KSAgentDictionary["cycles"] = 0  # cycles=0 means consumer is infinitely lived
 
 # KS assume that 'good' and 'bad' times are of equal expected duration
 # The probability of a change in the aggregate state is p_change=0.125
-p_change=0.125
-p_remain=1-p_change
+p_change = 0.125
+p_remain = 1 - p_change
 
 # Now we define macro transition probabilities for AggShockMarkovConsumerType
-#   [i,j] is probability of being in state j next period conditional on being in state i this period. 
+#   [i,j] is probability of being in state j next period conditional on being in state i this period.
 # In both states, there is 0.875 chance of staying, 0.125 chance of switching
-AggMrkvArray = \
-np.array([[p_remain,p_change],  # Probabilities of states 0 and 1 next period if in state 0
-          [p_change,p_remain]]) # Probabilities of states 0 and 1 next period if in state 1
-KSAgentDictionary['MrkvArray'] = AggMrkvArray
+AggMrkvArray = np.array(
+    [
+        [
+            p_remain,
+            p_change,
+        ],  # Probabilities of states 0 and 1 next period if in state 0
+        [p_change, p_remain],
+    ]
+)  # Probabilities of states 0 and 1 next period if in state 1
+KSAgentDictionary["MrkvArray"] = AggMrkvArray
 
 # %%
-# Create the Krusell-Smith agent as an instance of AggShockMarkovConsumerType 
+# Create the Krusell-Smith agent as an instance of AggShockMarkovConsumerType
 KSAgent = AggShockMarkovConsumerType(**KSAgentDictionary)
 
 # %% [markdown]
-# Now we need to specify the income distribution. 
+# Now we need to specify the income distribution.
 #
-# The HARK toolkit allows for two components of labor income: Persistent (or permanent), and transitory.  
+# The HARK toolkit allows for two components of labor income: Persistent (or permanent), and transitory.
 #
 # Using the KS notation above, a HARK consumer's income is
-# \begin{eqnarray}
-# y & = & w p \ell \epsilon 
-# \end{eqnarray}
+# \begin{align}
+# y & = & w p \ell \epsilon
+# \end{align}
 # where $p$ is the persistent component of income.  Krusell and Smith did not incorporate a persistent component of income, however, so we will simply calibrate $p=1$ for all states.
 #
 # For each of the two aggregate states we need to specify:
 #    * The _proportion_ of consumers in the $e$ and the $u$ states
 #    * The level of persistent/permanent productivity $p$ (always 1)
 #    * The ratio of actual to permanent productivity in each state $\{e,u\}$
-#       * In the KS notation, this is $\epsilon\ell$  
+#       * In the KS notation, this is $\epsilon\ell$
 #
 
 # %% code_folding=[]
 # Construct the income distribution for the Krusell-Smith agent
-prb_eg = 0.96         # Probability of   employment in the good state
-prb_ug = 1-prb_eg     # Probability of unemployment in the good state
-prb_eb = 0.90         # Probability of   employment in the bad state
-prb_ub = 1-prb_eb     # Probability of unemployment in the bad state
-p_ind  = 1            # Persistent component of income is always 1
-ell_ug = ell_ub = 0   # Labor supply is zero for unemployed consumers in either agg state
-ell_eg = 1.0/prb_eg   # Labor supply for employed consumer in good state
-ell_eb = 1.0/prb_eb   # 1=pe_g*ell_ge+pu_b*ell_gu=pe_b*ell_be+pu_b*ell_gu
+prb_eg = 0.96  # Probability of   employment in the good state
+prb_ug = 1 - prb_eg  # Probability of unemployment in the good state
+prb_eb = 0.90  # Probability of   employment in the bad state
+prb_ub = 1 - prb_eb  # Probability of unemployment in the bad state
+p_ind = 1  # Persistent component of income is always 1
+ell_ug = ell_ub = 0  # Labor supply is zero for unemployed consumers in either agg state
+ell_eg = 1.0 / prb_eg  # Labor supply for employed consumer in good state
+ell_eb = 1.0 / prb_eb  # 1=pe_g*ell_ge+pu_b*ell_gu=pe_b*ell_be+pu_b*ell_gu
 
 # IncomeDstn is a list of lists, one for each aggregate Markov state
-# Each contains three arrays of floats, representing a discrete approximation to the income process. 
-# Order: 
-#   state probabilities 
+# Each contains three arrays of floats, representing a discrete approximation to the income process.
+# Order:
+#   state probabilities
 #   idiosyncratic persistent income level by state (KS have no persistent shocks p_ind is always 1.0)
 #   idiosyncratic transitory income level by state
 
 KSAgent.IncomeDstn[0] = [
-     DiscreteDistribution(np.array([prb_eg,prb_ug]), 
-                          [np.array([p_ind,p_ind]),
-                           np.array([ell_eg,ell_ug])]), # Agg state good
-     DiscreteDistribution(np.array([prb_eb,prb_ub]),
-                          [np.array([p_ind,p_ind]),
-                           np.array([ell_eb,ell_ub])])  # Agg state bad
+    DiscreteDistribution(
+        np.array([prb_eg, prb_ug]),
+        [np.array([p_ind, p_ind]), np.array([ell_eg, ell_ug])],
+    ),  # Agg state good
+    DiscreteDistribution(
+        np.array([prb_eb, prb_ub]),
+        [np.array([p_ind, p_ind]), np.array([ell_eb, ell_ub])],
+    ),  # Agg state bad
 ]
 
 # %% [markdown]
-# Up to this point, individual agents do not have enough information to solve their decision problem yet. What is missing are beliefs about the endogenous macro variables $r$ and $w$, both of which are functions of $\bar{k}$. 
+# Up to this point, individual agents do not have enough information to solve their decision problem yet. What is missing are beliefs about the endogenous macro variables $r$ and $w$, both of which are functions of $\bar{k}$.
 
 # %% [markdown]
 # #### The Aggregate Economy
@@ -307,29 +328,37 @@ KSAgent.IncomeDstn[0] = [
 from HARK.ConsumptionSaving.ConsAggShockModel import CobbDouglasMarkovEconomy
 
 KSEconomyDictionary = {
-    'PermShkAggCount': 1, 
-    'TranShkAggCount': 1, 
-    'PermShkAggStd': [0.0,0.0], 
-    'TranShkAggStd': [0.0,0.0], 
-    'DeprFac': 0.025, # Depreciation factor
-    'DiscFac': 0.99,
-    'CRRA': 1.0,
-    'PermGroFacAgg': [1.0,1.0],
-    'AggregateL':1.0, # Fix aggregate labor supply at 1.0 - makes interpretation of z easier
-    'act_T':1200, # Number of periods for economy to run in simulation
-    'intercept_prev': [0.0,0.0], # Make some initial guesses at linear savings rule intercepts for each state
-    'slope_prev': [1.0,1.0], # Make some initial guesses at linear savings rule slopes for each state
-    'MrkvNow_init': 0   # Pick a state to start in (we pick the first state)
+    "PermShkAggCount": 1,
+    "TranShkAggCount": 1,
+    "PermShkAggStd": [0.0, 0.0],
+    "TranShkAggStd": [0.0, 0.0],
+    "DeprFac": 0.025,  # Depreciation factor
+    "DiscFac": 0.99,
+    "CRRA": 1.0,
+    "PermGroFacAgg": [1.0, 1.0],
+    "AggregateL": 1.0,  # Fix aggregate labor supply at 1.0 - makes interpretation of z easier
+    "act_T": 1200,  # Number of periods for economy to run in simulation
+    "intercept_prev": [
+        0.0,
+        0.0,
+    ],  # Make some initial guesses at linear savings rule intercepts for each state
+    "slope_prev": [
+        1.0,
+        1.0,
+    ],  # Make some initial guesses at linear savings rule slopes for each state
+    "MrkvNow_init": 0,  # Pick a state to start in (we pick the first state)
 }
 
 # The 'interesting' parts of the CobbDouglasMarkovEconomy
-KSEconomyDictionary['CapShare']  = 0.36
-KSEconomyDictionary['MrkvArray'] = AggMrkvArray
+KSEconomyDictionary["CapShare"] = 0.36
+KSEconomyDictionary["MrkvArray"] = AggMrkvArray
 
-KSEconomy = CobbDouglasMarkovEconomy(agents = [KSAgent], **KSEconomyDictionary) # Combine production and consumption sides into an "Economy"
+KSEconomy = CobbDouglasMarkovEconomy(
+    agents=[KSAgent], **KSEconomyDictionary
+)  # Combine production and consumption sides into an "Economy"
 
 # %% [markdown]
-# We have now populated the $\texttt{KSEconomy}$ with $\texttt{KSAgents}$ defined before. That is basically telling the agents to take the macro state from the $\texttt{KSEconomy}$. 
+# We have now populated the $\texttt{KSEconomy}$ with $\texttt{KSAgents}$ defined before. That is basically telling the agents to take the macro state from the $\texttt{KSEconomy}$.
 #
 # Now we construct the $\texttt{AggShkDstn}$ that specifies the evolution of the dynamics of the $\texttt{KSEconomy}$.
 #
@@ -338,20 +367,24 @@ KSEconomy = CobbDouglasMarkovEconomy(agents = [KSAgent], **KSEconomyDictionary) 
 # %% code_folding=[]
 # Calibrate the magnitude of the aggregate shocks
 
-Tran_g = 1.01 # Productivity z in the good aggregate state
-Tran_b = 0.99 # and the bad state
+Tran_g = 1.01  # Productivity z in the good aggregate state
+Tran_b = 0.99  # and the bad state
 
 # The HARK framework allows permanent shocks
-Perm_g = Perm_b = 1.0 # KS assume there are no aggregate permanent shocks
+Perm_g = Perm_b = 1.0  # KS assume there are no aggregate permanent shocks
 
 # Aggregate productivity shock distribution by state.
-# First element is probabilities of different outcomes, given the state you are in. 
+# First element is probabilities of different outcomes, given the state you are in.
 # Second element is agg permanent shocks (here we don't have any, so just they are just 1.).
 # Third  element is agg transitory shocks, which are calibrated the same as in Krusell Smith.
 
 KSAggShkDstn = [
-     DiscreteDistribution(np.array([1.0]), [np.array([Perm_g]), np.array([Tran_g])]), # Aggregate good
-     DiscreteDistribution(np.array([1.0]), [np.array([Perm_b]), np.array([Tran_b])])  # Aggregate bad
+    DiscreteDistribution(
+        np.array([1.0]), [np.array([Perm_g]), np.array([Tran_g])]
+    ),  # Aggregate good
+    DiscreteDistribution(
+        np.array([1.0]), [np.array([Perm_b]), np.array([Tran_b])]
+    ),  # Aggregate bad
 ]
 
 KSEconomy.AggShkDstn = KSAggShkDstn
@@ -372,19 +405,21 @@ KSEconomy.AggShkDstn = KSAggShkDstn
 # Now, we have fully defined all of the elements of the macroeconomy, and we are in postion to construct an object that represents the economy and to construct a rational expectations equilibrium.
 
 # %% code_folding=[]
-# Construct the economy, make an initial history, then solve 
+# Construct the economy, make an initial history, then solve
 
-KSAgent.getEconomyData(KSEconomy) # Makes attributes of the economy, attributes of the agent
+KSAgent.getEconomyData(
+    KSEconomy
+)  # Makes attributes of the economy, attributes of the agent
 
-KSEconomy.makeAggShkHist() # Make a simulated history of the economy
+KSEconomy.makeAggShkHist()  # Make a simulated history of the economy
 
-# Set tolerance level. 
+# Set tolerance level.
 
 KSEconomy.tolerance = 0.01
 
 # Solve macro problem by finding a fixed point for beliefs
 
-KSEconomy.solve() # Solve the economy using the market method. 
+KSEconomy.solve()  # Solve the economy using the market method.
 # i.e. guess the saving function, and iterate until a fixed point
 
 # %% [markdown]
@@ -393,7 +428,7 @@ KSEconomy.solve() # Solve the economy using the market method.
 # %% code_folding=[]
 # Plot some key results
 
-print('Aggregate savings as a function of aggregate market resources:')
+print("Aggregate savings as a function of aggregate market resources:")
 bottom = 0.1
 top = 2 * KSEconomy.kSS
 x = np.linspace(bottom, top, 1000, endpoint=True)
@@ -402,30 +437,38 @@ y1 = KSEconomy.AFunc[1](x)
 plt.plot(x, y0)
 plt.plot(x, y1)
 plt.xlim([bottom, top])
-make_figs('aggregate_savings', True, False, '../../Figures')
+make_figs("aggregate_savings", True, False, "../../Figures")
 plt.show()
 plt.clf()
 
-print('Consumption function at each aggregate market resources gridpoint (in general equilibrium):')
+print(
+    "Consumption function at each aggregate market resources gridpoint (in general equilibrium):"
+)
 KSAgent.unpackcFunc()
-m_grid = np.linspace(0,10,200)
+m_grid = np.linspace(0, 10, 200)
 KSAgent.unpackcFunc()
 for M in KSAgent.Mgrid:
-    c_at_this_M = KSAgent.solution[0].cFunc[0](m_grid,M*np.ones_like(m_grid)) #Have two consumption functions, check this
-    plt.plot(m_grid,c_at_this_M)
-make_figs('consumption_function', True, False, '../../Figures')
+    c_at_this_M = KSAgent.solution[0].cFunc[0](
+        m_grid, M * np.ones_like(m_grid)
+    )  # Have two consumption functions, check this
+    plt.plot(m_grid, c_at_this_M)
+make_figs("consumption_function", True, False, "../../Figures")
 plt.show()
 plt.clf()
 
-print('Savings at each individual market resources gridpoint (in general equilibrium):')
+print("Savings at each individual market resources gridpoint (in general equilibrium):")
 KSAgent.unpackcFunc()
-m_grid = np.linspace(0,10,200)
+m_grid = np.linspace(0, 10, 200)
 KSAgent.unpackcFunc()
 for M in KSAgent.Mgrid:
-    s_at_this_M = m_grid-KSAgent.solution[0].cFunc[1](m_grid,M*np.ones_like(m_grid))
-    c_at_this_M = KSAgent.solution[0].cFunc[1](m_grid,M*np.ones_like(m_grid)) #Have two consumption functions, check this
-    plt.plot(m_grid,s_at_this_M)
-make_figs('savings_function', True, False, '../../Figures')
+    s_at_this_M = m_grid - KSAgent.solution[0].cFunc[1](
+        m_grid, M * np.ones_like(m_grid)
+    )
+    c_at_this_M = KSAgent.solution[0].cFunc[1](
+        m_grid, M * np.ones_like(m_grid)
+    )  # Have two consumption functions, check this
+    plt.plot(m_grid, s_at_this_M)
+make_figs("savings_function", True, False, "../../Figures")
 plt.show()
 
 # %% [markdown]
@@ -435,45 +478,58 @@ plt.show()
 #
 
 # %%
-sim_wealth = KSEconomy.reap_state['aLvlNow'][0]
+sim_wealth = KSEconomy.reap_state["aLvlNow"][0]
 
 
-print("The mean of individual wealth is "+ str(sim_wealth.mean()) + ";\n the standard deviation is "
-      + str(sim_wealth.std())+";\n the median is " + str(np.median(sim_wealth)) +".")
+print(
+    "The mean of individual wealth is "
+    + str(sim_wealth.mean())
+    + ";\n the standard deviation is "
+    + str(sim_wealth.std())
+    + ";\n the median is "
+    + str(np.median(sim_wealth))
+    + "."
+)
 
 # %% code_folding=[]
 # Get some tools for plotting simulated vs actual wealth distributions
-from HARK.utilities import getLorenzShares, getPercentiles
+from HARK.utilities import getLorenzShares
 
-# The cstwMPC model conveniently has data on the wealth distribution 
+# The cstwMPC model conveniently has data on the wealth distribution
 # from the U.S. Survey of Consumer Finances
 from HARK.datasets import load_SCF_wealth_weights
+
 SCF_wealth, SCF_weights = load_SCF_wealth_weights()
 
 # %% code_folding=[]
 # Construct the Lorenz curves and plot them
 
-pctiles = np.linspace(0.001,0.999,15)
-SCF_Lorenz_points = getLorenzShares(SCF_wealth,weights=SCF_weights,percentiles=pctiles)
-sim_Lorenz_points = getLorenzShares(sim_wealth,percentiles=pctiles)
+pctiles = np.linspace(0.001, 0.999, 15)
+SCF_Lorenz_points = getLorenzShares(
+    SCF_wealth, weights=SCF_weights, percentiles=pctiles
+)
+sim_Lorenz_points = getLorenzShares(sim_wealth, percentiles=pctiles)
 
-# Plot 
-plt.figure(figsize=(5,5))
-plt.title('Wealth Distribution')
-plt.plot(pctiles,SCF_Lorenz_points,'--k',label='SCF')
-plt.plot(pctiles,sim_Lorenz_points,'-b',label='Benchmark KS')
-plt.plot(pctiles,pctiles,'g-.',label='45 Degree')
-plt.xlabel('Percentile of net worth')
-plt.ylabel('Cumulative share of wealth')
+# Plot
+plt.figure(figsize=(5, 5))
+plt.title("Wealth Distribution")
+plt.plot(pctiles, SCF_Lorenz_points, "--k", label="SCF")
+plt.plot(pctiles, sim_Lorenz_points, "-b", label="Benchmark KS")
+plt.plot(pctiles, pctiles, "g-.", label="45 Degree")
+plt.xlabel("Percentile of net worth")
+plt.ylabel("Cumulative share of wealth")
 plt.legend(loc=2)
-plt.ylim([0,1])
-make_figs('wealth_distribution_1', True, False, '../../Figures')
+plt.ylim([0, 1])
+make_figs("wealth_distribution_1", True, False, "../../Figures")
 plt.show()
 
 # %%
 # Calculate a measure of the difference between the simulated and empirical distributions
-lorenz_distance = np.sqrt(np.sum((SCF_Lorenz_points - sim_Lorenz_points)**2))
-print("The Euclidean distance between simulated wealth distribution and the estimates from the SCF data is "+str(lorenz_distance) )
+lorenz_distance = np.sqrt(np.sum((SCF_Lorenz_points - sim_Lorenz_points) ** 2))
+print(
+    "The Euclidean distance between simulated wealth distribution and the estimates from the SCF data is "
+    + str(lorenz_distance)
+)
 
 # %% [markdown]
 # #### Heterogeneous Time Preference Rates
@@ -486,12 +542,12 @@ print("The Euclidean distance between simulated wealth distribution and the esti
 #
 # The rationale is that this represents a generational transition: The "agent" is really a "dynasty" and the time preference rate of the "child" dynast may differ from that of the "parent."
 #
-# Specifically, KS assume that $\beta$ can take on three values, 0.9858, 0.9894, and 0.9930, and that the transition probabilities are such that 
+# Specifically, KS assume that $\beta$ can take on three values, 0.9858, 0.9894, and 0.9930, and that the transition probabilities are such that
 # - The invariant distribution for $\beta$’s has 80 percent of the population at the middle $\beta$ and 10 percent at each of the other $\beta$’s.
-# - Immediate transitions between the extreme values of $\beta$ occur with probability zero. 
-# - The average duration of the highest and lowest $\beta$’s is 50 years. 
+# - Immediate transitions between the extreme values of $\beta$ occur with probability zero.
+# - The average duration of the highest and lowest $\beta$’s is 50 years.
 #
-# The HARK toolkit is not natively set up to accommodate stochastic time preference factors (though an extension to accommodate this would be easy).  
+# The HARK toolkit is not natively set up to accommodate stochastic time preference factors (though an extension to accommodate this would be easy).
 #
 # Here, instead, we assume that different agents have different values of $\beta$ that are uniformly distributed over some range. We approximate the uniform distribution by three points.  The agents are heterogeneous _ex ante_ (and permanently).
 
@@ -501,115 +557,131 @@ from HARK.distribution import Uniform
 
 
 # Specify the distribution of the discount factor
-num_types = 3              # number of types we want;
-DiscFac_mean   = 0.9858    # center of beta distribution 
-DiscFac_spread = 0.0085    # spread of beta distribution
-DiscFac_dstn = Uniform(bot=DiscFac_mean-DiscFac_spread, top=DiscFac_mean+DiscFac_spread).approx(num_types).X
+num_types = 3  # number of types we want;
+DiscFac_mean = 0.9858  # center of beta distribution
+DiscFac_spread = 0.0085  # spread of beta distribution
+DiscFac_dstn = (
+    Uniform(bot=DiscFac_mean - DiscFac_spread, top=DiscFac_mean + DiscFac_spread)
+    .approx(num_types)
+    .X
+)
 
 BaselineType = deepcopy(KSAgent)
 
-MyTypes = [] # initialize an empty list to hold our consumer types
+MyTypes = []  # initialize an empty list to hold our consumer types
 for nn in range(len(DiscFac_dstn)):
     # Now create the types, and append them to the list MyTypes
     NewType = deepcopy(BaselineType)
     NewType.DiscFac = DiscFac_dstn[nn]
-    NewType.seed = nn # give each consumer type a different RNG seed
+    NewType.seed = nn  # give each consumer type a different RNG seed
     MyTypes.append(NewType)
 
 # %% code_folding=[]
 # Put all agents into the economy
-KSEconomy_sim = CobbDouglasMarkovEconomy(agents = MyTypes, **KSEconomyDictionary) 
-KSEconomy_sim.AggShkDstn = KSAggShkDstn # Agg shocks are the same as defined earlier
+KSEconomy_sim = CobbDouglasMarkovEconomy(agents=MyTypes, **KSEconomyDictionary)
+KSEconomy_sim.AggShkDstn = KSAggShkDstn  # Agg shocks are the same as defined earlier
 
 for ThisType in MyTypes:
-    ThisType.getEconomyData(KSEconomy_sim) # Makes attributes of the economy, attributes of the agent
+    ThisType.getEconomyData(
+        KSEconomy_sim
+    )  # Makes attributes of the economy, attributes of the agent
 
-KSEconomy_sim.makeAggShkHist() # Make a simulated prehistory of the economy
-KSEconomy_sim.solve()          # Solve macro problem by getting a fixed point dynamic rule
+KSEconomy_sim.makeAggShkHist()  # Make a simulated prehistory of the economy
+KSEconomy_sim.solve()  # Solve macro problem by getting a fixed point dynamic rule
 
 # %% code_folding=[]
 # Get the level of end-of-period assets a for all types of consumers
-aLvl_all = np.concatenate([KSEconomy_sim.reap_state['aLvlNow'][i] for i in range(len(MyTypes))])
+aLvl_all = np.concatenate(
+    [KSEconomy_sim.reap_state["aLvlNow"][i] for i in range(len(MyTypes))]
+)
 
-print('Aggregate capital to income ratio is ' + str(np.mean(aLvl_all)))
+print("Aggregate capital to income ratio is " + str(np.mean(aLvl_all)))
 
 # %% code_folding=[]
 # Plot the distribution of wealth across all agent types
 sim_3beta_wealth = aLvl_all
-pctiles = np.linspace(0.001,0.999,15)
-sim_Lorenz_points = getLorenzShares(sim_wealth,percentiles=pctiles)
-SCF_Lorenz_points = getLorenzShares(SCF_wealth,weights=SCF_weights,percentiles=pctiles)
-sim_3beta_Lorenz_points = getLorenzShares(sim_3beta_wealth,percentiles=pctiles)
+pctiles = np.linspace(0.001, 0.999, 15)
+sim_Lorenz_points = getLorenzShares(sim_wealth, percentiles=pctiles)
+SCF_Lorenz_points = getLorenzShares(
+    SCF_wealth, weights=SCF_weights, percentiles=pctiles
+)
+sim_3beta_Lorenz_points = getLorenzShares(sim_3beta_wealth, percentiles=pctiles)
 
 ## Plot
-plt.figure(figsize=(5,5))
-plt.title('Wealth Distribution')
-plt.plot(pctiles,SCF_Lorenz_points,'--k',label='SCF')
-plt.plot(pctiles,sim_Lorenz_points,'-b',label='Benchmark KS')
-plt.plot(pctiles,sim_3beta_Lorenz_points,'-*r',label='3 Types')
-plt.plot(pctiles,pctiles,'g-.',label='45 Degree')
-plt.xlabel('Percentile of net worth')
-plt.ylabel('Cumulative share of wealth')
+plt.figure(figsize=(5, 5))
+plt.title("Wealth Distribution")
+plt.plot(pctiles, SCF_Lorenz_points, "--k", label="SCF")
+plt.plot(pctiles, sim_Lorenz_points, "-b", label="Benchmark KS")
+plt.plot(pctiles, sim_3beta_Lorenz_points, "-*r", label="3 Types")
+plt.plot(pctiles, pctiles, "g-.", label="45 Degree")
+plt.xlabel("Percentile of net worth")
+plt.ylabel("Cumulative share of wealth")
 plt.legend(loc=2)
-plt.ylim([0,1])
-make_figs('wealth_distribution_2', True, False, '../../Figures')
+plt.ylim([0, 1])
+make_figs("wealth_distribution_2", True, False, "../../Figures")
 plt.show()
 
 # %% code_folding=[]
-# The mean levels of wealth for the three types of consumer are 
-[np.mean(KSEconomy_sim.reap_state['aLvlNow'][0]),np.mean(KSEconomy_sim.reap_state['aLvlNow'][1]),np.mean(KSEconomy_sim.reap_state['aLvlNow'][2])]
+# The mean levels of wealth for the three types of consumer are
+[
+    np.mean(KSEconomy_sim.reap_state["aLvlNow"][0]),
+    np.mean(KSEconomy_sim.reap_state["aLvlNow"][1]),
+    np.mean(KSEconomy_sim.reap_state["aLvlNow"][2]),
+]
 
 # %% code_folding=[]
-# Plot the distribution of wealth 
+# Plot the distribution of wealth
 for i in range(len(MyTypes)):
-    if i<=2:
-        plt.hist(np.log(KSEconomy_sim.reap_state['aLvlNow'][i])\
-                 ,label=r'$\beta$='+str(round(DiscFac_dstn[i],4))\
-                 ,bins=np.arange(-2.,np.log(max(aLvl_all)),0.05))
+    if i <= 2:
+        plt.hist(
+            np.log(KSEconomy_sim.reap_state["aLvlNow"][i]),
+            label=r"$\beta$=" + str(round(DiscFac_dstn[i], 4)),
+            bins=np.arange(-2.0, np.log(max(aLvl_all)), 0.05),
+        )
         plt.yticks([])
 plt.legend(loc=2)
-plt.title('Log Wealth Distribution of 3 Types')
-make_figs('log_wealth_3_types', True, False, '../../Figures')
+plt.title("Log Wealth Distribution of 3 Types")
+make_figs("log_wealth_3_types", True, False, "../../Figures")
 plt.show()
 
 # %% code_folding=[]
 # Distribution of wealth in original model with one type
-plt.hist(np.log(sim_wealth),bins=np.arange(-2.,np.log(max(aLvl_all)),0.05))
+plt.hist(np.log(sim_wealth), bins=np.arange(-2.0, np.log(max(aLvl_all)), 0.05))
 plt.yticks([])
-plt.title('Log Wealth Distribution of Original Model with One Type')
-make_figs('log_wealth_1', True, False, '../../Figures')
+plt.title("Log Wealth Distribution of Original Model with One Type")
+make_figs("log_wealth_1", True, False, "../../Figures")
 plt.show()
 
 # %% [markdown]
 # ### Target Wealth is Nonlinear in Time Preference Rate
 #
-# Note the nonlinear relationship between wealth and time preference in the economy with three types.  Although the three groups are uniformly spaced in $\beta$ values, there is a lot of overlap in the distribution of wealth of the two impatient types, who are both separated from the most patient type by a large gap.  
+# Note the nonlinear relationship between wealth and time preference in the economy with three types.  Although the three groups are uniformly spaced in $\beta$ values, there is a lot of overlap in the distribution of wealth of the two impatient types, who are both separated from the most patient type by a large gap.
 #
 # A model of buffer stock saving that has simplified enough to be [tractable](http://econ.jhu.edu/people/ccarroll/public/lecturenotes/Consumption/TractableBufferStock) yields some insight.  If $\sigma$ is a measure of income risk, $r$ is the interest rate, and $\theta$ is the time preference rate, then for an 'impatient' consumer (for whom $\theta > r$), in the logarithmic utility case an approximate formula for the target level of wealth is:
 #
 # <!-- Search for 'an approximation to target market resources' and note that a=m-1, and \gamma=0 -->
 #
-# \begin{eqnarray}
+# \begin{align}
 #  a & \approx & \left(\frac{1}{ \theta(1+(\theta-r)/\sigma)-r}\right)
-# \end{eqnarray}
+# \end{align}
 #
-# Conceptually, this reflects the fact that the only reason any of these agents holds positive wealth is the precautionary motive.  (If there is no uncertainty, $\sigma=0$ and thus $a=0$).  
+# Conceptually, this reflects the fact that the only reason any of these agents holds positive wealth is the precautionary motive.  (If there is no uncertainty, $\sigma=0$ and thus $a=0$).
 #
-# For positive uncertainty $\sigma>0$, as the degree of impatience (given by $\theta-r$) approaches zero, the target level of wealth approaches infinity.  
+# For positive uncertainty $\sigma>0$, as the degree of impatience (given by $\theta-r$) approaches zero, the target level of wealth approaches infinity.
 #
 # A plot of $a$ as a function of $\theta$ for a particular parameterization is shown below.
 
 # %% code_folding=[]
 # Plot target wealth as a function of time preference rate for calibrated tractable model
 fig = plt.figure()
-ax  = plt.axes()
+ax = plt.axes()
 sigma = 0.01
 r = 0.02
-theta = np.linspace(0.023,0.10,100)
-plt.plot(theta,1/(theta*(1+(theta-r)/sigma)-r))
-plt.xlabel(r'$\theta$')
-plt.ylabel('Target wealth')
-make_figs('target_wealth', True, False, '../../Figures')
+theta = np.linspace(0.023, 0.10, 100)
+plt.plot(theta, 1 / (theta * (1 + (theta - r) / sigma) - r))
+plt.xlabel(r"$\theta$")
+plt.ylabel("Target wealth")
+make_figs("target_wealth", True, False, "../../Figures")
 plt.show()
 
 # %% [markdown]
@@ -621,7 +693,10 @@ plt.show()
 
 # %%
 # Import Krusell-Smith model
-from HARK.ConsumptionSaving.ConsAggShockModel import KrusellSmithType, KrusellSmithEconomy
+from HARK.ConsumptionSaving.ConsAggShockModel import (
+    KrusellSmithType,
+    KrusellSmithEconomy,
+)
 from time import time
 from scipy.stats import linregress
 
@@ -638,39 +713,63 @@ KSeconomy.makeMrkvHist()
 # %%
 # Solve the Krusell-Smith economy
 t0 = time()
-print("Now solving for the equilibrium of the Krusell-Smith (1998) model.  This might take a few minutes...")
+print(
+    "Now solving for the equilibrium of the Krusell-Smith (1998) model.  This might take a few minutes..."
+)
 KSeconomy.solve()
 t1 = time()
-print('Solving the Krusell-Smith model took ' + str(t1-t0) + ' seconds.')
+print("Solving the Krusell-Smith model took " + str(t1 - t0) + " seconds.")
 
 # %%
 # Plot the consumption function for each discrete state
-state_names = ['bad economy, unemployed', 'bad economy, employed',
-               'good economy, unemployed', 'good economy, employed']
+state_names = [
+    "bad economy, unemployed",
+    "bad economy, employed",
+    "good economy, unemployed",
+    "good economy, employed",
+]
 
 for j in range(4):
-    plt.xlabel(r'Idiosyncratic market resources $m$')
-    plt.ylabel(r'Consumption $c$')
-    plt.title('Consumption function by aggregate market resources: ' + state_names[j])
-    plotFuncs(KStype.solution[0].cFunc[j].xInterpolators, 0., 50.)
+    plt.xlabel(r"Idiosyncratic market resources $m$")
+    plt.ylabel(r"Consumption $c$")
+    plt.title("Consumption function by aggregate market resources: " + state_names[j])
+    plotFuncs(KStype.solution[0].cFunc[j].xInterpolators, 0.0, 50.0)
 
 # %%
 # Extract history of aggregate capital and run a serial autoregression
-mystr = lambda x : '{:.4f}'.format(x)
-mystr2 = lambda x : '{:.7f}'.format(x)
-K_hist = np.array(KSeconomy.history['Aprev'])[KSeconomy.T_discard:]
-Mrkv_hist = KSeconomy.MrkvNow_hist[KSeconomy.T_discard:]
+def mystr(x):
+    return "{:.4f}".format(x)
+def mystr2(x):
+    return "{:.7f}".format(x)
+K_hist = np.array(KSeconomy.history["Aprev"])[KSeconomy.T_discard :]
+Mrkv_hist = KSeconomy.MrkvNow_hist[KSeconomy.T_discard :]
 bad = Mrkv_hist[:-1] == 0
 good = Mrkv_hist[:-1] == 1
 logK_t = np.log(K_hist[:-1])
 logK_tp1 = np.log(K_hist[1:])
 results_bad = linregress(logK_t[bad], logK_tp1[bad])
 results_good = linregress(logK_t[good], logK_tp1[good])
-print('')
-print('Equilibrium dynamics of aggregate capital:')
-print("Bad state:  log k' = " + mystr(results_bad[1]) + ' + ' + mystr(results_bad[0]) + ' log k (r-sq = ' +  mystr2(results_bad[2]**2) + ')')
-print("Good state: log k' = " + mystr(results_good[1]) + ' + ' + mystr(results_good[0]) + ' log k (r-sq = ' +  mystr2(results_good[2]**2) + ')')
-print('')
+print("")
+print("Equilibrium dynamics of aggregate capital:")
+print(
+    "Bad state:  log k' = "
+    + mystr(results_bad[1])
+    + " + "
+    + mystr(results_bad[0])
+    + " log k (r-sq = "
+    + mystr2(results_bad[2] ** 2)
+    + ")"
+)
+print(
+    "Good state: log k' = "
+    + mystr(results_good[1])
+    + " + "
+    + mystr(results_good[0])
+    + " log k (r-sq = "
+    + mystr2(results_good[2] ** 2)
+    + ")"
+)
+print("")
 print("Krusell & Smith's published results (p877):")
 print("Bad state:  log k' = 0.085 + 0.965 log k (r-sq = 0.999998)")
 print("Good state: log k' = 0.095 + 0.962 log k (r-sq = 0.999998)")
